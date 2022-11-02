@@ -5,6 +5,9 @@ import (
 	"mini-project/app/middlewares"
 	"mini-project/routes"
 
+	_postUseCase "mini-project/businesses/posts"
+	_postController "mini-project/controllers/posts"
+
 	_userUseCase "mini-project/businesses/users"
 	_userController "mini-project/controllers/users"
 
@@ -36,10 +39,14 @@ func main() {
 
 	configJWT := middlewares.ConfigJwt{
 		SecretJWT:       util.GetConfig("JWT_SECRET_KEY"),
-		ExpiresDuration: 24,
+		ExpiresDuration: 240,
 	}
 
 	e := echo.New()
+
+	postRepo := drivers.NewPostRepository(db)
+	postUsecase := _postUseCase.NewPostUsecase(postRepo)
+	postController := _postController.NewPostController(postUsecase)
 
 	lecturerRepo := drivers.NewLecturerRepository(db)
 	lecturerUsecase := _lecturerUseCase.NewLecturerUsecase(lecturerRepo)
@@ -50,7 +57,7 @@ func main() {
 	studentController := _studentController.NewStudentController(studentUsecase)
 
 	userRepo := drivers.NewUserRepository(db)
-	userUsecase := _userUseCase.NewUserUsecase(userRepo, &configJWT)
+	userUsecase := _userUseCase.NewUserUsecase(userRepo, postRepo, &configJWT)
 	userController := _userController.NewUserController(userUsecase)
 
 	routesInit := routes.ControllerList{
@@ -58,6 +65,7 @@ func main() {
 		UserController:     *userController,
 		StudentController:  *studentController,
 		LecturerController: *lecturerController,
+		PostController:     *postController,
 	}
 
 	routesInit.RouteRegister(e)

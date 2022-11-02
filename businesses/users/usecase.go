@@ -2,17 +2,18 @@ package users
 
 import (
 	"mini-project/app/middlewares"
+	"mini-project/businesses/posts"
 )
 
 type UserUsecase struct {
 	userRepository Repository
-	// studentRepository students.Repository
-	jwtAuth *middlewares.ConfigJwt
+	postRepository posts.Repository
+	jwtAuth        *middlewares.ConfigJwt
 }
 
-func NewUserUsecase(userRepository Repository, jwtAuth *middlewares.ConfigJwt) Usecase {
+func NewUserUsecase(userRepository Repository, postRepository posts.Repository, jwtAuth *middlewares.ConfigJwt) Usecase {
 
-	return &UserUsecase{userRepository: userRepository, jwtAuth: jwtAuth}
+	return &UserUsecase{userRepository: userRepository, postRepository: postRepository, jwtAuth: jwtAuth}
 }
 
 func (uu *UserUsecase) CreateUser(domain *Domain) Domain {
@@ -40,5 +41,8 @@ func (uu *UserUsecase) Update(id string, domain *Domain) Domain {
 	return uu.userRepository.Update(id, domain)
 }
 func (uu *UserUsecase) Delete(id string) bool {
+	if uu.postRepository.DeleteAllPostByUserID(id) == false {
+		return false
+	}
 	return uu.userRepository.Delete(id)
 }

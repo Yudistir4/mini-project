@@ -2,6 +2,7 @@ package routes
 
 import (
 	"mini-project/controllers/lecturers"
+	"mini-project/controllers/posts"
 	"mini-project/controllers/students"
 	"mini-project/controllers/users"
 
@@ -14,6 +15,7 @@ type ControllerList struct {
 	UserController     users.UserController
 	StudentController  students.StudentController
 	LecturerController lecturers.LecturerController
+	PostController     posts.PostController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
@@ -42,4 +44,10 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	auth.DELETE("/:id", cl.UserController.DeleteUser)
 	auth.PUT("/:id", cl.UserController.UpdateUser)
 
+	posts := e.Group("api/v1/posts", middleware.JWTWithConfig(cl.JWTMiddleware))
+	posts.GET("", cl.PostController.GetAll)
+	posts.GET("/:id", cl.PostController.GetById)
+	posts.POST("", cl.PostController.Create)
+	posts.DELETE("/:id", cl.PostController.DeletePost)
+	posts.PUT("/:id", cl.PostController.UpdatePost)
 }
