@@ -5,6 +5,7 @@ import (
 	"mini-project/controllers"
 	"mini-project/controllers/posts/request"
 	"mini-project/controllers/posts/response"
+	"mini-project/util"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -19,37 +20,52 @@ func NewPostController(authUC posts.Usecase) *PostController {
 }
 
 func (ctrl *PostController) Create(c echo.Context) error {
+	filename, err := util.FileHandling(c)
+	if err != nil {
+		return controllers.NewResponse(c, http.StatusNotFound, "failed", err.Error(), "")
+	}
 
 	dataInput := request.Post{}
-
+	dataInput.FileName = filename
 	if err := c.Bind(&dataInput); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
 			"message": "invalid request",
 		})
 	}
 
-	err := dataInput.Validate()
-	if err != nil {
+	if err := dataInput.Validate(); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
 			"message": "validation failed",
 		})
 
 	}
 
-	data := ctrl.lecturerUsecase.Create(dataInput.ToDomain())
-	return controllers.NewResponse(c, http.StatusCreated, "success", "create lecturer", response.FromDomain(data))
+	data, err := ctrl.lecturerUsecase.Create(dataInput.ToDomain())
+	if err != nil {
+		return controllers.NewResponse(c, http.StatusInternalServerError, "failed", err.Error(), "")
+
+	}
+	return controllers.NewResponse(c, http.StatusCreated, "success", "create post", response.FromDomain(data))
 }
 func (ctrl *PostController) GetById(c echo.Context) error {
 	id := c.Param("id")
 
-	data := ctrl.lecturerUsecase.GetByID(id)
+	data, err := ctrl.lecturerUsecase.GetByID(id)
+	if err != nil {
+		return controllers.NewResponse(c, http.StatusNotFound, "failed", err.Error(), "")
+
+	}
 
 	return controllers.NewResponse(c, http.StatusOK, "success", "get data", response.FromDomain(data))
 
 }
 func (ctrl *PostController) GetAll(c echo.Context) error {
 
-	postsData := ctrl.lecturerUsecase.GetAll()
+	postsData, err := ctrl.lecturerUsecase.GetAll()
+	if err != nil {
+		return controllers.NewResponse(c, http.StatusInternalServerError, "failed", err.Error(), "")
+
+	}
 
 	posts := []response.Post{}
 
@@ -71,23 +87,19 @@ func (ctrl *PostController) UpdatePost(c echo.Context) error {
 		})
 	}
 
-	err := dataInput.Validate()
+	data, err := ctrl.lecturerUsecase.Update(id, dataInput.ToDomain())
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{
-			"message": "validation failed",
-		})
 
+		return controllers.NewResponse(c, http.StatusOK, "failed", err.Error(), "")
 	}
-
-	data := ctrl.lecturerUsecase.Update(id, dataInput.ToDomain())
 	return controllers.NewResponse(c, http.StatusOK, "success", "Update Post", response.FromDomain(data))
 }
 func (ctrl *PostController) DeletePost(c echo.Context) error {
 	id := c.Param("id")
 
-	status := ctrl.lecturerUsecase.Delete(id)
-	if status == false {
-		return controllers.NewResponse(c, http.StatusOK, "failed", "Delete Post", "")
+	err := ctrl.lecturerUsecase.Delete(id)
+	if err != nil {
+		return controllers.NewResponse(c, http.StatusOK, "failed", err.Error(), "")
 	}
 	return controllers.NewResponse(c, http.StatusOK, "success", "Delete Post", "")
 }

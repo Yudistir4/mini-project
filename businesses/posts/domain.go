@@ -13,7 +13,6 @@ type Domain struct {
 	DeletedAt gorm.DeletedAt
 
 	FileName string
-	FileType string
 	Caption  string
 
 	UserID     string
@@ -25,19 +24,19 @@ type Domain struct {
 }
 
 type Usecase interface {
-	Create(Domain *Domain) Domain
-	GetByID(id string) Domain
-	Update(id string, Domain *Domain) Domain
-	Delete(id string) bool
-	DeleteAllPostByUserID(userID string) bool
-	GetAll() []Domain
+	Create(Domain *Domain) (Domain, error)
+	GetByID(id string) (Domain, error)
+	Update(id string, Domain *Domain) (Domain, error)
+	Delete(id string) error
+	DeleteAllPostByUserID(userID string) error
+	GetAll() ([]Domain, error)
 }
 
 type Repository interface {
-	Create(Domain *Domain) Domain
-	GetByID(id string) Domain
-	Update(id string, Domain *Domain) Domain
-	Delete(id string) bool
-	DeleteAllPostByUserID(userID string) bool
-	GetAll() []Domain
+	Create(Domain *Domain) (Domain, error)
+	GetByID(id string) (Domain, error)
+	Update(id string, Domain *Domain) (Domain, error)
+	Delete(id string) error
+	DeleteAllPostByUserID(userID string) error
+	GetAll() ([]Domain, error)
 }

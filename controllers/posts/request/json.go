@@ -7,16 +7,14 @@ import (
 )
 
 type Post struct {
-	FileName string `json:"file_name"`
-	FileType string `json:"file_type"`
-	Caption  string `json:"caption" validate:"required"`
-	UserID   string `json:"user_id" validate:"required"`
+	FileName string `json:"file_name" validate:"required"`
+	Caption  string `form:"caption" json:"caption"`
+	UserID   string `form:"user_id" json:"user_id" validate:"required"`
 }
 
 func (req *Post) ToDomain() *posts.Domain {
 	return &posts.Domain{
 		FileName: req.FileName,
-		FileType: req.FileType,
 		Caption:  req.Caption,
 		UserID:   req.UserID,
 	}

@@ -14,7 +14,6 @@ type Post struct {
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 
 	FileName   string `json:"file_name"`
-	FileType   string `json:"file_type"`
 	Caption    string `json:"caption"`
 	UserType   string `json:"user_type"`
 	UserID     string `json:"user_id"`
@@ -32,7 +31,6 @@ func FromDomain(domain posts.Domain) Post {
 		DeletedAt: domain.DeletedAt,
 
 		FileName:   domain.FileName,
-		FileType:   domain.FileType,
 		Caption:    domain.Caption,
 		UserType:   domain.UserType,
 		UserID:     domain.UserID,

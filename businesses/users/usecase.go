@@ -104,7 +104,7 @@ func (uu *UserUsecase) Delete(id string) error {
 		return err
 	}
 
-	if uu.postRepository.DeleteAllPostByUserID(id) == false {
+	if err := uu.postRepository.DeleteAllPostByUserID(id); err != nil {
 		return err
 	}
 	if err := uu.userRepository.Delete(id); err != nil {

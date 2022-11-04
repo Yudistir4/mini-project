@@ -2,8 +2,6 @@ package posts
 
 import (
 	"mini-project/businesses/posts"
-	"mini-project/drivers/mysql/lecturers"
-	"mini-project/drivers/mysql/students"
 	"mini-project/drivers/mysql/users"
 	"time"
 
@@ -17,7 +15,6 @@ type Post struct {
 	DeletedAt gorm.DeletedAt `json:"deletedAt"`
 
 	FileName string `json:"file_name"`
-	FileType string `json:"file_type"`
 	Caption  string `json:"caption"`
 
 	UserID string     `json:"user_id"`
@@ -31,18 +28,17 @@ func FromDomain(domain *posts.Domain) *Post {
 		UpdatedAt: domain.UpdatedAt,
 		DeletedAt: domain.DeletedAt,
 		FileName:  domain.FileName,
-		FileType:  domain.FileType,
 		Caption:   domain.Caption,
 		UserID:    domain.UserID,
-		User: users.User{
-			UserType:   domain.UserType,
-			Name:       domain.Name,
-			ProfilePic: domain.ProfilePic,
-			Student:    students.Student{Nim: domain.Nim},
-			Lecturer: lecturers.Lecturer{
-				Nidn: domain.Nidn,
-			},
-		},
+		// User: users.User{
+		// 	UserType:   domain.UserType,
+		// 	Name:       domain.Name,
+		// 	ProfilePic: domain.ProfilePic,
+		// 	Student:    students.Student{Nim: domain.Nim},
+		// 	Lecturer: lecturers.Lecturer{
+		// 		Nidn: domain.Nidn,
+		// 	},
+		// },
 	}
 }
 func (rec *Post) ToDomain() posts.Domain {
@@ -53,7 +49,6 @@ func (rec *Post) ToDomain() posts.Domain {
 		DeletedAt: rec.DeletedAt,
 
 		FileName: rec.FileName,
-		FileType: rec.FileType,
 		Caption:  rec.Caption,
 		UserID:   rec.UserID,
 
