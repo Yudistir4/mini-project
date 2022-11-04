@@ -30,15 +30,6 @@ func FromDomain(domain *posts.Domain) *Post {
 		FileName:  domain.FileName,
 		Caption:   domain.Caption,
 		UserID:    domain.UserID,
-		// User: users.User{
-		// 	UserType:   domain.UserType,
-		// 	Name:       domain.Name,
-		// 	ProfilePic: domain.ProfilePic,
-		// 	Student:    students.Student{Nim: domain.Nim},
-		// 	Lecturer: lecturers.Lecturer{
-		// 		Nidn: domain.Nidn,
-		// 	},
-		// },
 	}
 }
 func (rec *Post) ToDomain() posts.Domain {
