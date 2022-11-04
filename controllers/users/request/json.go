@@ -7,6 +7,7 @@ import (
 )
 
 type User struct {
+	ID            string `json:"id"`
 	Email         string `json:"email" validate:"required,email"`
 	Password      string `json:"password" validate:"required"`
 	UserType      string `json:"user_type"`
@@ -18,12 +19,18 @@ type User struct {
 	Linkedin      string `json:"linkedin"`
 	Whatsapp      string `json:"whatsapp"`
 
-	StudentID  string `json:"student_id"`
-	LecturerID string `json:"lecturer_id"`
+	Nim      string `json:"nim"`
+	Angkatan int    `json:"angkatan"`
+	Semester int    `json:"semester"`
+	Status   string `json:"status"`
+
+	Nidn         string `json:"nidn"`
+	RumpunBidang string `json:"rumpun_bidang"`
 }
 
 func (req *User) ToDomain() *users.Domain {
 	return &users.Domain{
+		ID:            req.ID,
 		Email:         req.Email,
 		Password:      req.Password,
 		UserType:      req.UserType,
@@ -34,8 +41,14 @@ func (req *User) ToDomain() *users.Domain {
 		Instagram:     req.Instagram,
 		Linkedin:      req.Linkedin,
 		Whatsapp:      req.Whatsapp,
-		StudentID:     req.StudentID,
-		LecturerID:    req.LecturerID,
+
+		Nim:      req.Nim,
+		Angkatan: req.Angkatan,
+		Semester: req.Semester,
+		Status:   req.Status,
+
+		Nidn:         req.Nidn,
+		RumpunBidang: req.RumpunBidang,
 	}
 }
 

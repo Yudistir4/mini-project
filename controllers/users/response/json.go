@@ -23,13 +23,11 @@ type User struct {
 	Linkedin      string         `json:"linkedin"`
 	Whatsapp      string         `json:"whatsapp"`
 
-	StudentID string `json:"student_id"`
-	Nim       string `json:"nim"`
-	Angkatan  int    `json:"angkatan"`
-	Semester  int    `json:"semester"`
-	Status    string `json:"status"`
+	Nim      string `json:"nim"`
+	Angkatan int    `json:"angkatan"`
+	Semester int    `json:"semester"`
+	Status   string `json:"status"`
 
-	LecturerID   string `json:"lecturer_id"`
 	Nidn         string `json:"nidn"`
 	RumpunBidang string `json:"rumpun_bidang"`
 }
@@ -51,13 +49,11 @@ func FromDomain(domain users.Domain) User {
 		Linkedin:      domain.Linkedin,
 		Whatsapp:      domain.Whatsapp,
 
-		StudentID: domain.StudentID,
-		Nim:       domain.Nim,
-		Angkatan:  domain.Angkatan,
-		Semester:  domain.Semester,
-		Status:    domain.Status,
+		Nim:      domain.Nim,
+		Angkatan: domain.Angkatan,
+		Semester: domain.Semester,
+		Status:   domain.Status,
 
-		LecturerID:   domain.LecturerID,
 		Nidn:         domain.Nidn,
 		RumpunBidang: domain.RumpunBidang,
 	}

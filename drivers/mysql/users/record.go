@@ -50,17 +50,6 @@ func FromDomain(domain *users.Domain) *User {
 		Whatsapp:      domain.Whatsapp,
 		StudentID:     domain.StudentID,
 		LecturerID:    domain.LecturerID,
-
-		Student: students.Student{
-			Nim:      domain.Nim,
-			Angkatan: domain.Angkatan,
-			Semester: domain.Semester,
-			Status:   domain.Status,
-		},
-		Lecturer: lecturers.Lecturer{
-			Nidn:         domain.Nidn,
-			RumpunBidang: domain.RumpunBidang,
-		},
 	}
 }
 func (rec *User) ToDomain() users.Domain {

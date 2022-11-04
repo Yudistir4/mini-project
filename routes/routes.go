@@ -1,9 +1,7 @@
 package routes
 
 import (
-	"mini-project/controllers/lecturers"
 	"mini-project/controllers/posts"
-	"mini-project/controllers/students"
 	"mini-project/controllers/users"
 
 	"github.com/labstack/echo/v4"
@@ -11,38 +9,23 @@ import (
 )
 
 type ControllerList struct {
-	JWTMiddleware      middleware.JWTConfig
-	UserController     users.UserController
-	StudentController  students.StudentController
-	LecturerController lecturers.LecturerController
-	PostController     posts.PostController
+	JWTMiddleware  middleware.JWTConfig
+	UserController users.UserController
+	PostController posts.PostController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
-	users := e.Group("api/v1/users")
+	auth := e.Group("api/v1/auth")
 
-	users.POST("/signup", cl.UserController.CreateUser)
-	users.POST("/login", cl.UserController.Login)
+	auth.POST("/signup", cl.UserController.CreateUser)
+	auth.POST("/login", cl.UserController.Login)
 
-	students := e.Group("api/v1/students")
-	students.POST("", cl.StudentController.Create)
-	students.GET("", cl.StudentController.GetAll)
-	students.GET("/:id", cl.StudentController.GetById)
-	students.PUT("/:id", cl.StudentController.UpdateStudent)
-	students.DELETE("/:id", cl.StudentController.DeleteStudent)
-
-	lecturers := e.Group("api/v1/lecturers")
-	lecturers.POST("", cl.LecturerController.Create)
-	lecturers.GET("", cl.LecturerController.GetAll)
-	lecturers.GET("/:id", cl.LecturerController.GetById)
-	lecturers.PUT("/:id", cl.LecturerController.UpdateLecturer)
-	lecturers.DELETE("/:id", cl.LecturerController.DeleteLecturer)
-
-	auth := e.Group("api/v1/users", middleware.JWTWithConfig(cl.JWTMiddleware))
-	auth.GET("", cl.UserController.GetAllUsers)
-	auth.GET("/:id", cl.UserController.GetByID)
-	auth.DELETE("/:id", cl.UserController.DeleteUser)
-	auth.PUT("/:id", cl.UserController.UpdateUser)
+	users := e.Group("api/v1/users", middleware.JWTWithConfig(cl.JWTMiddleware))
+	users.GET("", cl.UserController.GetAllUsers)
+	users.GET("/:id", cl.UserController.GetByID)
+	users.DELETE("/:id", cl.UserController.DeleteUser)
+	users.PUT("/:id", cl.UserController.UpdateUser)
+	users.PUT("/:id/profilepicture", cl.UserController.UpdateProfilePicture)
 
 	posts := e.Group("api/v1/posts", middleware.JWTWithConfig(cl.JWTMiddleware))
 	posts.GET("", cl.PostController.GetAll)

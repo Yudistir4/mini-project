@@ -35,19 +35,21 @@ type Domain struct {
 }
 
 type Usecase interface {
-	CreateUser(userDomain *Domain) Domain
-	Login(userDomain *Domain) string
-	GetByID(id string) Domain
-	Update(id string, userDomain *Domain) Domain
-	Delete(id string) bool
-	GetAllUsers(limit, page int) []Domain
+	CreateUser(userDomain *Domain) (Domain, error)
+	Login(userDomain *Domain) (string, error)
+	GetByID(id string) (Domain, error)
+	Update(id string, userDomain *Domain) (Domain, error)
+	Delete(id string) error
+	GetAllUsers(limit int, page int, userType string, name string) ([]Domain, error)
+	UpdateProfilePicture(id, filename string) error
 }
 
 type Repository interface {
-	CreateUser(userDomain *Domain) Domain
-	GetByEmail(userDomain *Domain) Domain
-	GetByID(id string) Domain
-	Update(id string, userDomain *Domain) Domain
-	Delete(id string) bool
-	GetAllUsers(limit, page int) []Domain
+	CreateUser(userDomain *Domain) (Domain, error)
+	GetByEmail(userDomain *Domain) (Domain, error)
+	GetByID(id string) (Domain, error)
+	Update(id string, userDomain *Domain) error
+	Delete(id string) error
+	GetAllUsers(limit int, page int, userType string, name string) ([]Domain, error)
+	UpdateProfilePicture(id, filename string) error
 }

@@ -18,18 +18,9 @@ type Domain struct {
 	Status   string
 }
 
-type Usecase interface {
-	Create(userDomain *Domain) Domain
-	GetByID(id string) Domain
-	Update(id string, userDomain *Domain) Domain
-	Delete(id string) bool
-	GetAll() []Domain
-}
-
 type Repository interface {
-	Create(userDomain *Domain) Domain
-	GetByID(id string) Domain
-	Update(id string, userDomain *Domain) Domain
-	Delete(id string) bool
-	GetAll() []Domain
+	Create(userDomain *Domain) (Domain, error)
+	GetByID(id string) (Domain, error)
+	Update(id string, userDomain *Domain) error
+	Delete(id string) error
 }

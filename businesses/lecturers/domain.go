@@ -16,18 +16,9 @@ type Domain struct {
 	RumpunBidang string
 }
 
-type Usecase interface {
-	Create(Domain *Domain) Domain
-	GetByID(id string) Domain
-	Update(id string, Domain *Domain) Domain
-	Delete(id string) bool
-	GetAll() []Domain
-}
-
 type Repository interface {
-	Create(Domain *Domain) Domain
-	GetByID(id string) Domain
-	Update(id string, Domain *Domain) Domain
-	Delete(id string) bool
-	GetAll() []Domain
+	Create(Domain *Domain) (Domain, error)
+	GetByID(id string) (Domain, error)
+	Update(id string, Domain *Domain) error
+	Delete(id string) error
 }

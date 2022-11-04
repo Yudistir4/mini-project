@@ -17,51 +17,36 @@ func NewMySQLRepository(conn *gorm.DB) lecturers.Repository {
 	}
 }
 
-func (ur *LecturerRepository) Create(domain *lecturers.Domain) lecturers.Domain {
+func (ur *LecturerRepository) Create(domain *lecturers.Domain) (lecturers.Domain, error) {
 	lecturer := FromDomain(domain)
 	lecturer.ID = uuid.New().String()
-	ur.conn.Save(&lecturer)
+	if err := ur.conn.Save(&lecturer).Error; err != nil {
+		return lecturers.Domain{}, err
+	}
 
-	return lecturer.ToDomain()
+	return lecturer.ToDomain(), nil
 }
-func (ur *LecturerRepository) GetByID(id string) lecturers.Domain {
+func (ur *LecturerRepository) GetByID(id string) (lecturers.Domain, error) {
 	var lecturer Lecturer
-	ur.conn.First(&lecturer, "id = ?", id)
-
-	if lecturer.ID == "" {
-		return lecturers.Domain{}
+	if err := ur.conn.First(&lecturer, "id = ?", id).Error; err != nil {
+		return lecturers.Domain{}, err
 	}
-
-	return lecturer.ToDomain()
+	return lecturer.ToDomain(), nil
 }
-func (ur *LecturerRepository) GetAll() []lecturers.Domain {
-	var rec []Lecturer
-	ur.conn.Find(&rec)
 
-	lecturersDomain := []lecturers.Domain{}
+func (ur *LecturerRepository) Update(id string, domain *lecturers.Domain) error {
 
-	for _, lecturer := range rec {
-		lecturersDomain = append(lecturersDomain, lecturer.ToDomain())
-	}
-
-	return lecturersDomain
-}
-func (ur *LecturerRepository) Update(id string, domain *lecturers.Domain) lecturers.Domain {
-	lecturer := ur.GetByID(id)
-
-	updateLecturer := FromDomain(&lecturer)
-	updateLecturer.RumpunBidang = domain.RumpunBidang
-	updateLecturer.Nidn = domain.Nidn
+	updateLecturer := FromDomain(domain)
 
 	if err := ur.conn.Save(&updateLecturer).Error; err != nil {
-		return lecturers.Domain{}
+		return err
 	}
-	return updateLecturer.ToDomain()
+	return nil
 }
-func (ur *LecturerRepository) Delete(id string) bool {
+func (ur *LecturerRepository) Delete(id string) error {
 	var lecturer Lecturer
 	if err := ur.conn.Delete(&lecturer, "id = ?", id).Error; err != nil {
-		return false
+		return err
 	}
-	return true
+	return nil
 }

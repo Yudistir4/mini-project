@@ -12,7 +12,7 @@ type Student struct {
 	CreatedAt time.Time      `json:"createdAt"`
 	UpdatedAt time.Time      `json:"updatedAt"`
 	DeletedAt gorm.DeletedAt `json:"deletedAt"`
-	Nim       string         `json:"nim"`
+	Nim       string         `json:"nim" gorm:"unique"`
 	Angkatan  int            `json:"angkatan"`
 	Semester  int            `json:"semester"`
 	Status    string         `json:"status"`

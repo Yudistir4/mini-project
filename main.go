@@ -11,12 +11,6 @@ import (
 	_userUseCase "mini-project/businesses/users"
 	_userController "mini-project/controllers/users"
 
-	_lecturerUseCase "mini-project/businesses/lecturers"
-	_lecturerController "mini-project/controllers/lecturers"
-
-	_studentUseCase "mini-project/businesses/students"
-	_studentController "mini-project/controllers/students"
-
 	"mini-project/drivers"
 	"mini-project/drivers/mysql"
 	"mini-project/util"
@@ -49,23 +43,16 @@ func main() {
 	postController := _postController.NewPostController(postUsecase)
 
 	lecturerRepo := drivers.NewLecturerRepository(db)
-	lecturerUsecase := _lecturerUseCase.NewLecturerUsecase(lecturerRepo)
-	lecturerController := _lecturerController.NewLecturerController(lecturerUsecase)
-
 	studentRepo := drivers.NewStudentRepository(db)
-	studentUsecase := _studentUseCase.NewStudentUsecase(studentRepo)
-	studentController := _studentController.NewStudentController(studentUsecase)
 
 	userRepo := drivers.NewUserRepository(db)
-	userUsecase := _userUseCase.NewUserUsecase(userRepo, postRepo, &configJWT)
+	userUsecase := _userUseCase.NewUserUsecase(userRepo, studentRepo, lecturerRepo, postRepo, &configJWT)
 	userController := _userController.NewUserController(userUsecase)
 
 	routesInit := routes.ControllerList{
-		JWTMiddleware:      configJWT.Init(),
-		UserController:     *userController,
-		StudentController:  *studentController,
-		LecturerController: *lecturerController,
-		PostController:     *postController,
+		JWTMiddleware:  configJWT.Init(),
+		UserController: *userController,
+		PostController: *postController,
 	}
 
 	routesInit.RouteRegister(e)

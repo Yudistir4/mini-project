@@ -17,53 +17,38 @@ func NewMySQLRepository(conn *gorm.DB) students.Repository {
 	}
 }
 
-func (ur *StudentRepository) Create(domain *students.Domain) students.Domain {
+func (ur *StudentRepository) Create(domain *students.Domain) (students.Domain, error) {
 	student := FromDomain(domain)
 	student.ID = uuid.New().String()
-	ur.conn.Save(&student)
+	if err := ur.conn.Save(&student).Error; err != nil {
+		return students.Domain{}, err
+	}
 
-	return student.ToDomain()
+	return student.ToDomain(), nil
 }
-func (ur *StudentRepository) GetByID(id string) students.Domain {
+func (ur *StudentRepository) GetByID(id string) (students.Domain, error) {
 	var student Student
-	ur.conn.First(&student, "id = ?", id)
+	if err := ur.conn.First(&student, "id = ?", id).Error; err != nil {
 
-	if student.ID == "" {
-		return students.Domain{}
+		return students.Domain{}, err
 	}
 
-	return student.ToDomain()
+	return student.ToDomain(), nil
 }
-func (ur *StudentRepository) GetAll() []students.Domain {
-	var rec []Student
-	ur.conn.Find(&rec)
 
-	studentsDomain := []students.Domain{}
+func (ur *StudentRepository) Update(id string, domain *students.Domain) error {
 
-	for _, student := range rec {
-		studentsDomain = append(studentsDomain, student.ToDomain())
-	}
-
-	return studentsDomain
-}
-func (ur *StudentRepository) Update(id string, domain *students.Domain) students.Domain {
-	student := ur.GetByID(id)
-
-	updateStudent := FromDomain(&student)
-	updateStudent.Nim = domain.Nim
-	updateStudent.Angkatan = domain.Angkatan
-	updateStudent.Semester = domain.Semester
-	updateStudent.Status = domain.Status
+	updateStudent := FromDomain(domain)
 
 	if err := ur.conn.Save(&updateStudent).Error; err != nil {
-		return students.Domain{}
+		return err
 	}
-	return updateStudent.ToDomain()
+	return nil
 }
-func (ur *StudentRepository) Delete(id string) bool {
+func (ur *StudentRepository) Delete(id string) error {
 	var student Student
 	if err := ur.conn.Delete(&student, "id = ?", id).Error; err != nil {
-		return false
+		return err
 	}
-	return true
+	return nil
 }
