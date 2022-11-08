@@ -15,6 +15,9 @@ type Domain struct {
 	FileName string
 	Caption  string
 
+	LikeCount    int
+	CommentCount int
+
 	UserID     string
 	UserType   string
 	Name       string
@@ -29,7 +32,7 @@ type Usecase interface {
 	Update(id string, Domain *Domain) (Domain, error)
 	Delete(id string) error
 	DeleteAllPostByUserID(userID string) error
-	GetAll() ([]Domain, error)
+	GetAll(userID string) ([]Domain, error)
 }
 
 type Repository interface {
@@ -38,5 +41,5 @@ type Repository interface {
 	Update(id string, Domain *Domain) (Domain, error)
 	Delete(id string) error
 	DeleteAllPostByUserID(userID string) error
-	GetAll() ([]Domain, error)
+	GetAll(userID string) ([]Domain, error)
 }

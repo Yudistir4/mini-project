@@ -60,8 +60,8 @@ func (ctrl *PostController) GetById(c echo.Context) error {
 
 }
 func (ctrl *PostController) GetAll(c echo.Context) error {
-
-	postsData, err := ctrl.lecturerUsecase.GetAll()
+	userID := c.QueryParam("user_id")
+	postsData, err := ctrl.lecturerUsecase.GetAll(userID)
 	if err != nil {
 		return controllers.NewResponse(c, http.StatusInternalServerError, "failed", err.Error(), "")
 

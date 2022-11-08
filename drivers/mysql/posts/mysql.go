@@ -41,9 +41,15 @@ func (ur *PostRepository) GetByID(id string) (posts.Domain, error) {
 
 	return post.ToDomain(), nil
 }
-func (ur *PostRepository) GetAll() ([]posts.Domain, error) {
+func (ur *PostRepository) GetAll(userID string) ([]posts.Domain, error) {
 	var rec []Post
-	ur.conn.Preload("User").Preload("User.Student").Preload("User.Lecturer").Find(&rec)
+	if userID != "" {
+		ur.conn.Preload("User").Preload("User.Student").Preload("User.Lecturer").Find(&rec, "user_id = ?", userID)
+
+	} else {
+
+		ur.conn.Preload("User").Preload("User.Student").Preload("User.Lecturer").Find(&rec)
+	}
 
 	postsDomain := []posts.Domain{}
 

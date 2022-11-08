@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"mini-project/controllers/comments"
 	"mini-project/controllers/posts"
 	"mini-project/controllers/users"
 
@@ -9,9 +10,10 @@ import (
 )
 
 type ControllerList struct {
-	JWTMiddleware  middleware.JWTConfig
-	UserController users.UserController
-	PostController posts.PostController
+	JWTMiddleware     middleware.JWTConfig
+	UserController    users.UserController
+	PostController    posts.PostController
+	CommentController comments.CommentController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
@@ -33,4 +35,11 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	posts.POST("", cl.PostController.Create)
 	posts.DELETE("/:id", cl.PostController.DeletePost)
 	posts.PUT("/:id", cl.PostController.UpdatePost)
+
+	comments := e.Group("api/v1/comments", middleware.JWTWithConfig(cl.JWTMiddleware))
+	comments.GET("", cl.CommentController.GetAll)
+	comments.GET("/:id", cl.CommentController.GetById)
+	comments.POST("", cl.CommentController.Create)
+	comments.DELETE("/:id", cl.CommentController.DeletePost)
+
 }

@@ -5,6 +5,9 @@ import (
 	"mini-project/app/middlewares"
 	"mini-project/routes"
 
+	_commentUseCase "mini-project/businesses/comments"
+	_commentController "mini-project/controllers/comments"
+
 	_postUseCase "mini-project/businesses/posts"
 	_postController "mini-project/controllers/posts"
 
@@ -38,8 +41,12 @@ func main() {
 
 	e := echo.New()
 
+	commentRepo := drivers.NewCommentRepository(db)
+	commentUsecase := _commentUseCase.NewCommentUsecase(commentRepo)
+	commentController := _commentController.NewCommentController(commentUsecase)
+
 	postRepo := drivers.NewPostRepository(db)
-	postUsecase := _postUseCase.NewPostUsecase(postRepo)
+	postUsecase := _postUseCase.NewPostUsecase(postRepo, commentRepo)
 	postController := _postController.NewPostController(postUsecase)
 
 	lecturerRepo := drivers.NewLecturerRepository(db)
@@ -50,9 +57,10 @@ func main() {
 	userController := _userController.NewUserController(userUsecase)
 
 	routesInit := routes.ControllerList{
-		JWTMiddleware:  configJWT.Init(),
-		UserController: *userController,
-		PostController: *postController,
+		JWTMiddleware:     configJWT.Init(),
+		UserController:    *userController,
+		PostController:    *postController,
+		CommentController: *commentController,
 	}
 
 	routesInit.RouteRegister(e)

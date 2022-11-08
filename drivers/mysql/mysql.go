@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"mini-project/drivers/mysql/comments"
 	"mini-project/drivers/mysql/lecturers"
 	"mini-project/drivers/mysql/posts"
 	"mini-project/drivers/mysql/students"
@@ -44,7 +45,7 @@ func (config *ConfigDB) InitDB() *gorm.DB {
 }
 
 func DBMigrate(db *gorm.DB) {
-	db.AutoMigrate(&users.User{}, &students.Student{}, &lecturers.Lecturer{}, &posts.Post{})
+	db.AutoMigrate(&users.User{}, &students.Student{}, &lecturers.Lecturer{}, &posts.Post{}, &comments.Comment{})
 }
 
 // func SeedUser(db *gorm.DB) users.User {

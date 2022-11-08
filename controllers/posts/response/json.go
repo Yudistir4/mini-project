@@ -13,22 +13,26 @@ type Post struct {
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 
-	FileName   string `json:"file_name"`
-	Caption    string `json:"caption"`
-	UserType   string `json:"user_type"`
-	UserID     string `json:"user_id"`
-	Name       string `json:"name"`
-	ProfilePic string `json:"profile_pic"`
-	Nim        string `json:"nim"`
-	Nidn       string `json:"nidn"`
+	CommentCount int    `json:"comment_count"`
+	LikeCount    int    `json:"like_count"`
+	FileName     string `json:"file_name"`
+	Caption      string `json:"caption"`
+	UserType     string `json:"user_type"`
+	UserID       string `json:"user_id"`
+	Name         string `json:"name"`
+	ProfilePic   string `json:"profile_pic"`
+	Nim          string `json:"nim"`
+	Nidn         string `json:"nidn"`
 }
 
 func FromDomain(domain posts.Domain) Post {
 	return Post{
-		ID:        domain.ID,
-		CreatedAt: domain.CreatedAt,
-		UpdatedAt: domain.UpdatedAt,
-		DeletedAt: domain.DeletedAt,
+		ID:           domain.ID,
+		CreatedAt:    domain.CreatedAt,
+		UpdatedAt:    domain.UpdatedAt,
+		DeletedAt:    domain.DeletedAt,
+		CommentCount: domain.CommentCount,
+		LikeCount:    domain.LikeCount,
 
 		FileName:   domain.FileName,
 		Caption:    domain.Caption,
