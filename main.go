@@ -5,6 +5,9 @@ import (
 	"mini-project/app/middlewares"
 	"mini-project/routes"
 
+	_likeUseCase "mini-project/businesses/likes"
+	_likeController "mini-project/controllers/likes"
+
 	_commentUseCase "mini-project/businesses/comments"
 	_commentController "mini-project/controllers/comments"
 
@@ -41,12 +44,16 @@ func main() {
 
 	e := echo.New()
 
+	likeRepo := drivers.NewLikeRepository(db)
+	likeUsecase := _likeUseCase.NewLikeUsecase(likeRepo)
+	likeController := _likeController.NewLikeController(likeUsecase)
+
 	commentRepo := drivers.NewCommentRepository(db)
 	commentUsecase := _commentUseCase.NewCommentUsecase(commentRepo)
 	commentController := _commentController.NewCommentController(commentUsecase)
 
 	postRepo := drivers.NewPostRepository(db)
-	postUsecase := _postUseCase.NewPostUsecase(postRepo, commentRepo)
+	postUsecase := _postUseCase.NewPostUsecase(postRepo, commentRepo, likeRepo)
 	postController := _postController.NewPostController(postUsecase)
 
 	lecturerRepo := drivers.NewLecturerRepository(db)
@@ -61,6 +68,7 @@ func main() {
 		UserController:    *userController,
 		PostController:    *postController,
 		CommentController: *commentController,
+		LikeController:    *likeController,
 	}
 
 	routesInit.RouteRegister(e)

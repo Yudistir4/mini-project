@@ -2,6 +2,7 @@ package routes
 
 import (
 	"mini-project/controllers/comments"
+	"mini-project/controllers/likes"
 	"mini-project/controllers/posts"
 	"mini-project/controllers/users"
 
@@ -14,6 +15,7 @@ type ControllerList struct {
 	UserController    users.UserController
 	PostController    posts.PostController
 	CommentController comments.CommentController
+	LikeController    likes.LikeController
 }
 
 func (cl *ControllerList) RouteRegister(e *echo.Echo) {
@@ -40,6 +42,12 @@ func (cl *ControllerList) RouteRegister(e *echo.Echo) {
 	comments.GET("", cl.CommentController.GetAll)
 	comments.GET("/:id", cl.CommentController.GetById)
 	comments.POST("", cl.CommentController.Create)
-	comments.DELETE("/:id", cl.CommentController.DeletePost)
+	comments.DELETE("/:id", cl.CommentController.DeleteComment)
+
+	likes := e.Group("api/v1/likes", middleware.JWTWithConfig(cl.JWTMiddleware))
+	likes.GET("", cl.LikeController.GetAll)
+	likes.GET("/:id", cl.LikeController.GetById)
+	likes.POST("", cl.LikeController.Create)
+	likes.DELETE("", cl.LikeController.DeleteLike)
 
 }

@@ -3,12 +3,14 @@ package drivers
 import (
 	"mini-project/businesses/comments"
 	"mini-project/businesses/lecturers"
+	"mini-project/businesses/likes"
 	"mini-project/businesses/posts"
 	"mini-project/businesses/students"
 	"mini-project/businesses/users"
 
 	commentsDB "mini-project/drivers/mysql/comments"
 	lecturersDB "mini-project/drivers/mysql/lecturers"
+	likesDB "mini-project/drivers/mysql/likes"
 	postsDB "mini-project/drivers/mysql/posts"
 	studentsDB "mini-project/drivers/mysql/students"
 	usersDB "mini-project/drivers/mysql/users"
@@ -31,4 +33,7 @@ func NewPostRepository(conn *gorm.DB) posts.Repository {
 }
 func NewCommentRepository(conn *gorm.DB) comments.Repository {
 	return commentsDB.NewMySQLRepository(conn)
+}
+func NewLikeRepository(conn *gorm.DB) likes.Repository {
+	return likesDB.NewMySQLRepository(conn)
 }

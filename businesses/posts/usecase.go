@@ -2,18 +2,21 @@ package posts
 
 import (
 	"mini-project/businesses/comments"
+	"mini-project/businesses/likes"
 )
 
 type PostUsecase struct {
 	postRepository    Repository
 	commentRepository comments.Repository
+	likeRepository    likes.Repository
 }
 
-func NewPostUsecase(postRepository Repository, commentRepository comments.Repository) Usecase {
+func NewPostUsecase(postRepository Repository, commentRepository comments.Repository, likeRepository likes.Repository) Usecase {
 
 	return &PostUsecase{
 		postRepository:    postRepository,
 		commentRepository: commentRepository,
+		likeRepository:    likeRepository,
 	}
 }
 
@@ -33,7 +36,12 @@ func (u *PostUsecase) GetByID(id string) (Domain, error) {
 	}
 	post.CommentCount = commentCount
 
-	// TODO: count like
+	// count like
+	likeCount, err := u.likeRepository.GetLikeCount(id)
+	if err != nil {
+		return Domain{}, err
+	}
+	post.LikeCount = likeCount
 
 	return post, nil
 }
@@ -52,7 +60,12 @@ func (u *PostUsecase) GetAll(userID string) ([]Domain, error) {
 		}
 		posts[i].CommentCount = commentCount
 
-		// TODO: count like
+		// count like
+		likeCount, err := u.likeRepository.GetLikeCount(posts[i].ID)
+		if err != nil {
+			return []Domain{}, err
+		}
+		posts[i].LikeCount = likeCount
 	}
 	return posts, nil
 }
@@ -69,7 +82,11 @@ func (u *PostUsecase) Delete(id string) error {
 	if err := u.commentRepository.DeleteAllCommentByPostID(id); err != nil {
 		return err
 	}
-	//TODO: delete all likes
+	// delete all likes
+	if err := u.likeRepository.DeleteAllLikeByPostID(id); err != nil {
+		return err
+	}
+
 	//TODO: delete all saved
 	return u.postRepository.Delete(id)
 }
@@ -78,12 +95,13 @@ func (u *PostUsecase) DeleteAllPostByUserID(id string) error {
 	if err != nil {
 		return err
 	}
-	//TODO: delete all commment
 	for _, post := range posts {
+		// delete all commment
 		u.commentRepository.DeleteAllCommentByPostID(post.ID)
+		// delete all likes
+		u.likeRepository.DeleteAllLikeByPostID(post.ID)
+		//TODO: delete all saved
 	}
-	//TODO: delete all likes
-	//TODO: delete all saved
 
 	return u.postRepository.DeleteAllPostByUserID(id)
 

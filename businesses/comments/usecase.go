@@ -9,11 +9,11 @@ func NewCommentUsecase(commentRepository Repository) Usecase {
 	return &CommentUsecase{commentRepository: commentRepository}
 }
 
-func (uu *CommentUsecase) Create(domain *Domain) (Domain, error) {
-	return uu.commentRepository.Create(domain)
+func (u *CommentUsecase) Create(domain *Domain) (Domain, error) {
+	return u.commentRepository.Create(domain)
 }
-func (uu *CommentUsecase) GetByID(id string) (Domain, error) {
-	post, err := uu.commentRepository.GetByID(id)
+func (u *CommentUsecase) GetByID(id string) (Domain, error) {
+	post, err := u.commentRepository.GetByID(id)
 	if err != nil {
 		return Domain{}, err
 	}
@@ -21,13 +21,13 @@ func (uu *CommentUsecase) GetByID(id string) (Domain, error) {
 	return post, nil
 }
 
-func (uu *CommentUsecase) GetAll(postID string) ([]Domain, error) {
-	return uu.commentRepository.GetAll(postID)
+func (u *CommentUsecase) GetAll(postID string) ([]Domain, error) {
+	return u.commentRepository.GetAll(postID)
 }
 
-func (uu *CommentUsecase) Delete(id string) error {
-	return uu.commentRepository.Delete(id)
+func (u *CommentUsecase) Delete(id string) error {
+	return u.commentRepository.Delete(id)
 }
-func (uu *CommentUsecase) DeleteAllCommentByPostID(id string) error {
-	return uu.commentRepository.DeleteAllCommentByPostID(id)
+func (u *CommentUsecase) DeleteAllCommentByPostID(id string) error {
+	return u.commentRepository.DeleteAllCommentByPostID(id)
 }

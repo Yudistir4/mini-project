@@ -72,7 +72,7 @@ func (ctrl *CommentController) GetAll(c echo.Context) error {
 
 }
 
-func (ctrl *CommentController) DeletePost(c echo.Context) error {
+func (ctrl *CommentController) DeleteComment(c echo.Context) error {
 	id := c.Param("id")
 
 	err := ctrl.lecturerUsecase.Delete(id)
