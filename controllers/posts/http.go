@@ -1,6 +1,7 @@
 package posts
 
 import (
+	"mini-project/app/middlewares"
 	"mini-project/businesses/posts"
 	"mini-project/controllers"
 	"mini-project/controllers/posts/request"
@@ -12,11 +13,11 @@ import (
 )
 
 type PostController struct {
-	lecturerUsecase posts.Usecase
+	postUsecase posts.Usecase
 }
 
 func NewPostController(authUC posts.Usecase) *PostController {
-	return &PostController{lecturerUsecase: authUC}
+	return &PostController{postUsecase: authUC}
 }
 
 func (ctrl *PostController) Create(c echo.Context) error {
@@ -27,6 +28,7 @@ func (ctrl *PostController) Create(c echo.Context) error {
 
 	dataInput := request.Post{}
 	dataInput.FileName = filename
+	dataInput.UserID = middlewares.GetUserIDFromToken(c)
 	if err := c.Bind(&dataInput); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
 			"message": "invalid request",
@@ -40,7 +42,7 @@ func (ctrl *PostController) Create(c echo.Context) error {
 
 	}
 
-	data, err := ctrl.lecturerUsecase.Create(dataInput.ToDomain())
+	data, err := ctrl.postUsecase.Create(dataInput.ToDomain())
 	if err != nil {
 		return controllers.NewResponse(c, http.StatusInternalServerError, "failed", err.Error(), "")
 
@@ -48,9 +50,11 @@ func (ctrl *PostController) Create(c echo.Context) error {
 	return controllers.NewResponse(c, http.StatusCreated, "success", "create post", response.FromDomain(data))
 }
 func (ctrl *PostController) GetById(c echo.Context) error {
-	id := c.Param("id")
 
-	data, err := ctrl.lecturerUsecase.GetByID(id)
+	postID := c.Param("id")
+	userIDAccessing := middlewares.GetUserIDFromToken(c)
+
+	data, err := ctrl.postUsecase.GetByID(userIDAccessing, postID)
 	if err != nil {
 		return controllers.NewResponse(c, http.StatusNotFound, "failed", err.Error(), "")
 
@@ -61,7 +65,9 @@ func (ctrl *PostController) GetById(c echo.Context) error {
 }
 func (ctrl *PostController) GetAll(c echo.Context) error {
 	userID := c.QueryParam("user_id")
-	postsData, err := ctrl.lecturerUsecase.GetAll(userID)
+	userIDAccessing := middlewares.GetUserIDFromToken(c)
+
+	postsData, err := ctrl.postUsecase.GetAll(userIDAccessing, userID)
 	if err != nil {
 		return controllers.NewResponse(c, http.StatusInternalServerError, "failed", err.Error(), "")
 
@@ -87,7 +93,7 @@ func (ctrl *PostController) UpdatePost(c echo.Context) error {
 		})
 	}
 
-	data, err := ctrl.lecturerUsecase.Update(id, dataInput.ToDomain())
+	data, err := ctrl.postUsecase.Update(id, dataInput.ToDomain())
 	if err != nil {
 
 		return controllers.NewResponse(c, http.StatusOK, "failed", err.Error(), "")
@@ -97,9 +103,58 @@ func (ctrl *PostController) UpdatePost(c echo.Context) error {
 func (ctrl *PostController) DeletePost(c echo.Context) error {
 	id := c.Param("id")
 
-	err := ctrl.lecturerUsecase.Delete(id)
+	err := ctrl.postUsecase.Delete(id)
 	if err != nil {
 		return controllers.NewResponse(c, http.StatusOK, "failed", err.Error(), "")
 	}
 	return controllers.NewResponse(c, http.StatusOK, "success", "Delete Post", "")
+}
+
+func (ctrl *PostController) SavePost(c echo.Context) error {
+
+	postID := c.Param("id")
+	userIDAccessing := middlewares.GetUserIDFromToken(c)
+
+	err := ctrl.postUsecase.SavePost(userIDAccessing, postID)
+	if err != nil {
+		return controllers.NewResponse(c, http.StatusInternalServerError, "failed", err.Error(), "")
+
+	}
+	return controllers.NewResponse(c, http.StatusCreated, "success", "save post", "")
+}
+func (ctrl *PostController) UnsavePost(c echo.Context) error {
+
+	postID := c.Param("id")
+	userIDAccessing := middlewares.GetUserIDFromToken(c)
+
+	err := ctrl.postUsecase.UnsavePost(userIDAccessing, postID)
+	if err != nil {
+		return controllers.NewResponse(c, http.StatusInternalServerError, "failed", err.Error(), "")
+
+	}
+	return controllers.NewResponse(c, http.StatusCreated, "success", "unsave post", "")
+}
+func (ctrl *PostController) LikePost(c echo.Context) error {
+
+	postID := c.Param("id")
+	userIDAccessing := middlewares.GetUserIDFromToken(c)
+
+	err := ctrl.postUsecase.LikePost(userIDAccessing, postID)
+	if err != nil {
+		return controllers.NewResponse(c, http.StatusInternalServerError, "failed", err.Error(), "")
+
+	}
+	return controllers.NewResponse(c, http.StatusCreated, "success", "like post", "")
+}
+func (ctrl *PostController) UnlikePost(c echo.Context) error {
+
+	postID := c.Param("id")
+	userIDAccessing := middlewares.GetUserIDFromToken(c)
+
+	err := ctrl.postUsecase.UnlikePost(userIDAccessing, postID)
+	if err != nil {
+		return controllers.NewResponse(c, http.StatusInternalServerError, "failed", err.Error(), "")
+
+	}
+	return controllers.NewResponse(c, http.StatusCreated, "success", "unlike post", "")
 }

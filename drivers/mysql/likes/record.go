@@ -41,12 +41,6 @@ func (rec *Like) ToDomain() likes.Domain {
 		DeletedAt: rec.DeletedAt,
 
 		PostID: rec.PostID,
-
-		UserID:     rec.UserID,
-		UserType:   rec.User.UserType,
-		Name:       rec.User.Name,
-		ProfilePic: rec.User.ProfilePic,
-		Nim:        rec.User.Student.Nim,
-		Nidn:       rec.User.Lecturer.Nidn,
+		UserID: rec.UserID,
 	}
 }

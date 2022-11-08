@@ -23,6 +23,9 @@ type Post struct {
 	ProfilePic   string `json:"profile_pic"`
 	Nim          string `json:"nim"`
 	Nidn         string `json:"nidn"`
+
+	IsSaved bool `json:"is_saved"`
+	IsLiked bool `json:"is_liked"`
 }
 
 func FromDomain(domain posts.Domain) Post {
@@ -41,5 +44,8 @@ func FromDomain(domain posts.Domain) Post {
 		Name:       domain.Name,
 		ProfilePic: domain.ProfilePic,
 		Nim:        domain.Nim,
+
+		IsSaved: domain.IsSaved,
+		IsLiked: domain.IsLiked,
 	}
 }

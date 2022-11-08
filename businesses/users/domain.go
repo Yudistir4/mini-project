@@ -35,7 +35,7 @@ type Domain struct {
 }
 
 type Usecase interface {
-	CreateUser(userDomain *Domain) (Domain, error)
+	CreateUser(userIDAccessing string, userDomain *Domain) (Domain, error)
 	Login(userDomain *Domain) (string, error)
 	GetByID(id string) (Domain, error)
 	Update(id string, userDomain *Domain) (Domain, error)

@@ -2,6 +2,7 @@ package users
 
 import (
 	"fmt"
+	"mini-project/app/middlewares"
 	"mini-project/businesses/users"
 	"mini-project/controllers"
 	"mini-project/controllers/users/request"
@@ -22,6 +23,7 @@ func NewUserController(authUC users.Usecase) *UserController {
 }
 
 func (ctrl *UserController) CreateUser(c echo.Context) error {
+	userIDAccessing := middlewares.GetUserIDFromToken(c)
 
 	userInput := request.User{}
 
@@ -34,9 +36,9 @@ func (ctrl *UserController) CreateUser(c echo.Context) error {
 		return controllers.NewResponse(c, http.StatusBadRequest, "failed", "Validation failed", "")
 	}
 
-	user, err := ctrl.userUsecase.CreateUser(userInput.ToDomain())
+	user, err := ctrl.userUsecase.CreateUser(userIDAccessing, userInput.ToDomain())
 	if err != nil {
-		return controllers.NewResponse(c, http.StatusCreated, "failed", err.Error(), "")
+		return controllers.NewResponse(c, http.StatusBadRequest, "failed", err.Error(), "")
 	}
 	return controllers.NewResponse(c, http.StatusCreated, "success", "create user", response.FromDomain(user))
 }
@@ -117,7 +119,7 @@ func (ctrl *UserController) UpdateUser(c echo.Context) error {
 	return controllers.NewResponse(c, http.StatusOK, "success", "Update User", response.FromDomain(user))
 }
 func (ctrl *UserController) UpdateProfilePicture(c echo.Context) error {
-	id := c.Param("id")
+	id := middlewares.GetUserIDFromToken(c)
 	filename, err := util.FileHandling(c)
 	if err != nil {
 		return controllers.NewResponse(c, http.StatusNotFound, "failed", err.Error(), "")

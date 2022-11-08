@@ -5,6 +5,7 @@ import (
 	"mini-project/businesses/lecturers"
 	"mini-project/businesses/likes"
 	"mini-project/businesses/posts"
+	"mini-project/businesses/saves"
 	"mini-project/businesses/students"
 	"mini-project/businesses/users"
 
@@ -12,6 +13,7 @@ import (
 	lecturersDB "mini-project/drivers/mysql/lecturers"
 	likesDB "mini-project/drivers/mysql/likes"
 	postsDB "mini-project/drivers/mysql/posts"
+	savesDB "mini-project/drivers/mysql/saves"
 	studentsDB "mini-project/drivers/mysql/students"
 	usersDB "mini-project/drivers/mysql/users"
 
@@ -36,4 +38,7 @@ func NewCommentRepository(conn *gorm.DB) comments.Repository {
 }
 func NewLikeRepository(conn *gorm.DB) likes.Repository {
 	return likesDB.NewMySQLRepository(conn)
+}
+func NewSaveRepository(conn *gorm.DB) saves.Repository {
+	return savesDB.NewMySQLRepository(conn)
 }

@@ -1,6 +1,7 @@
 package comments
 
 import (
+	"mini-project/app/middlewares"
 	"mini-project/businesses/comments"
 	"mini-project/controllers"
 	"mini-project/controllers/comments/request"
@@ -21,6 +22,7 @@ func NewCommentController(authUC comments.Usecase) *CommentController {
 func (ctrl *CommentController) Create(c echo.Context) error {
 
 	dataInput := request.Comment{}
+	dataInput.UserID = middlewares.GetUserIDFromToken(c)
 
 	if err := c.Bind(&dataInput); err != nil {
 		return c.JSON(http.StatusBadRequest, map[string]string{
@@ -40,7 +42,7 @@ func (ctrl *CommentController) Create(c echo.Context) error {
 		return controllers.NewResponse(c, http.StatusInternalServerError, "failed", err.Error(), "")
 
 	}
-	return controllers.NewResponse(c, http.StatusCreated, "success", "create post", response.FromDomain(data))
+	return controllers.NewResponse(c, http.StatusCreated, "success", "create comment", response.FromDomain(data))
 }
 func (ctrl *CommentController) GetById(c echo.Context) error {
 	id := c.Param("id")
@@ -55,7 +57,7 @@ func (ctrl *CommentController) GetById(c echo.Context) error {
 
 }
 func (ctrl *CommentController) GetAll(c echo.Context) error {
-	postID := c.QueryParam("postID")
+	postID := c.QueryParam("post_id")
 	commentsData, err := ctrl.lecturerUsecase.GetAll(postID)
 	if err != nil {
 		return controllers.NewResponse(c, http.StatusInternalServerError, "failed", err.Error(), "")

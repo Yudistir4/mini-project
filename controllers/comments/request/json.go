@@ -9,7 +9,7 @@ import (
 type Comment struct {
 	Comment string `json:"comment" validate:"required"`
 	PostID  string `json:"post_id" validate:"required"`
-	UserID  string `json:"user_id" validate:"required"`
+	UserID  string
 }
 
 func (req *Comment) ToDomain() *comments.Domain {

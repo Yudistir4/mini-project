@@ -18,25 +18,28 @@ func NewMySQLRepository(conn *gorm.DB) likes.Repository {
 	}
 }
 
-func (r *LikeRepository) Create(domain *likes.Domain) (likes.Domain, error) {
+func (r *LikeRepository) Create(userID, postID string) error {
 	var dataLikeExist Like
-	if err := r.conn.First(&dataLikeExist, "user_id = ? AND post_id = ?", domain.UserID, domain.PostID).Error; err == nil {
-		return likes.Domain{}, errors.New("like already exists")
+	if err := r.conn.First(&dataLikeExist, "user_id = ? AND post_id = ?", userID, postID).Error; err == nil {
+		return errors.New("like already exists")
 	}
 
-	like := FromDomain(domain)
-	like.ID = uuid.New().String()
+	like := Like{
+		ID:     uuid.New().String(),
+		UserID: userID,
+		PostID: postID,
+	}
 
 	if err := r.conn.Save(&like).Error; err != nil {
-		return likes.Domain{}, err
+		return err
 	}
 
 	var dataLike Like
 	if err := r.conn.Preload("User").Preload("User.Student").Preload("User.Lecturer").First(&dataLike, "id = ?", like.ID).Error; err != nil {
-		return likes.Domain{}, err
+		return err
 	}
 
-	return dataLike.ToDomain(), nil
+	return nil
 }
 func (r *LikeRepository) GetByID(id string) (likes.Domain, error) {
 	var like Like
@@ -46,13 +49,13 @@ func (r *LikeRepository) GetByID(id string) (likes.Domain, error) {
 
 	return like.ToDomain(), nil
 }
-func (r *LikeRepository) GetByUserIDAndPostID(userID, postID string) (likes.Domain, error) {
+func (r *LikeRepository) GetByUserIDAndPostID(userID, postID string) error {
 	var like Like
 	if err := r.conn.First(&like, "user_id = ? AND post_id = ?", userID, postID).Error; err != nil {
-		return likes.Domain{}, err
+		return err
 	}
 
-	return like.ToDomain(), nil
+	return nil
 }
 func (r *LikeRepository) GetAll(postID string) ([]likes.Domain, error) {
 	var rec []Like
@@ -67,7 +70,7 @@ func (r *LikeRepository) GetAll(postID string) ([]likes.Domain, error) {
 	return likesDomain, nil
 }
 func (r *LikeRepository) Delete(userID, postID string) error {
-	_, err := r.GetByUserIDAndPostID(userID, postID)
+	err := r.GetByUserIDAndPostID(userID, postID)
 	if err != nil {
 		return err
 	}

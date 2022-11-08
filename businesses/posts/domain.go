@@ -18,6 +18,9 @@ type Domain struct {
 	LikeCount    int
 	CommentCount int
 
+	IsLiked bool
+	IsSaved bool
+
 	UserID     string
 	UserType   string
 	Name       string
@@ -28,16 +31,20 @@ type Domain struct {
 
 type Usecase interface {
 	Create(Domain *Domain) (Domain, error)
-	GetByID(id string) (Domain, error)
+	GetByID(userIDAccessing, postID string) (Domain, error)
 	Update(id string, Domain *Domain) (Domain, error)
 	Delete(id string) error
 	DeleteAllPostByUserID(userID string) error
-	GetAll(userID string) ([]Domain, error)
+	GetAll(userIDAccessing, userID string) ([]Domain, error)
+	SavePost(userIDAccessing, postID string) error
+	UnsavePost(userIDAccessing, postID string) error
+	LikePost(userIDAccessing, postID string) error
+	UnlikePost(userIDAccessing, postID string) error
 }
 
 type Repository interface {
 	Create(Domain *Domain) (Domain, error)
-	GetByID(id string) (Domain, error)
+	GetByID(postID string) (Domain, error)
 	Update(id string, Domain *Domain) (Domain, error)
 	Delete(id string) error
 	DeleteAllPostByUserID(userID string) error

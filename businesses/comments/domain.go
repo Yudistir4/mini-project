@@ -12,16 +12,11 @@ type Domain struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt
 
-	Comment string
-
-	PostID string
-
+	Comment    string
+	PostID     string
 	UserID     string
-	UserType   string
 	Name       string
 	ProfilePic string
-	Nim        string
-	Nidn       string
 }
 
 type Usecase interface {
@@ -29,7 +24,6 @@ type Usecase interface {
 	GetByID(id string) (Domain, error)
 	Delete(id string) error
 	DeleteAllCommentByPostID(postID string) error
-	// TODO: pagination
 	GetAll(postID string) ([]Domain, error)
 }
 

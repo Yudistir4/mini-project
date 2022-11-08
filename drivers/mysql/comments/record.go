@@ -37,20 +37,14 @@ func FromDomain(domain *comments.Domain) *Comment {
 }
 func (rec *Comment) ToDomain() comments.Domain {
 	return comments.Domain{
-		ID:        rec.ID,
-		CreatedAt: rec.CreatedAt,
-		UpdatedAt: rec.UpdatedAt,
-		DeletedAt: rec.DeletedAt,
-
-		Comment: rec.Comment,
-
-		PostID: rec.PostID,
-
+		ID:         rec.ID,
+		CreatedAt:  rec.CreatedAt,
+		UpdatedAt:  rec.UpdatedAt,
+		DeletedAt:  rec.DeletedAt,
+		Comment:    rec.Comment,
+		PostID:     rec.PostID,
 		UserID:     rec.UserID,
-		UserType:   rec.User.UserType,
 		Name:       rec.User.Name,
 		ProfilePic: rec.User.ProfilePic,
-		Nim:        rec.User.Student.Nim,
-		Nidn:       rec.User.Lecturer.Nidn,
 	}
 }

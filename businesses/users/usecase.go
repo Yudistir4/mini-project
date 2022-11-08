@@ -1,6 +1,7 @@
 package users
 
 import (
+	"errors"
 	"mini-project/app/middlewares"
 	"mini-project/businesses/lecturers"
 	"mini-project/businesses/posts"
@@ -20,8 +21,11 @@ func NewUserUsecase(userRepository Repository, studentRepository students.Reposi
 	return &UserUsecase{userRepository: userRepository, studentRepository: studentRepository, lecturerRepository: lecturerRepository, postRepository: postRepository, jwtAuth: jwtAuth}
 }
 
-func (u *UserUsecase) CreateUser(domain *Domain) (Domain, error) {
-
+func (u *UserUsecase) CreateUser(userIDAccessing string, domain *Domain) (Domain, error) {
+	user, _ := u.userRepository.GetByID(userIDAccessing)
+	if user.UserType != "university" {
+		return Domain{}, errors.New("User Not Authenticated")
+	}
 	if domain.UserType == "student" {
 		student, err := u.studentRepository.Create(&students.Domain{
 			Nim:      domain.Nim,
@@ -51,6 +55,7 @@ func (u *UserUsecase) Login(domain *Domain) (string, error) {
 	}
 
 	token := u.jwtAuth.GenerateToken(user.ID)
+
 	return token, nil
 }
 

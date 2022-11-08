@@ -9,7 +9,7 @@ import (
 type Post struct {
 	FileName string `json:"file_name" validate:"required"`
 	Caption  string `form:"caption" json:"caption"`
-	UserID   string `form:"user_id" json:"user_id" validate:"required"`
+	UserID   string
 }
 
 func (req *Post) ToDomain() *posts.Domain {
