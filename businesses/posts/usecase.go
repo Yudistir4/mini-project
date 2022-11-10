@@ -85,7 +85,7 @@ func (u *PostUsecase) GetAll(userIDAccessing, userID string) ([]Domain, error) {
 			posts[i].IsSaved = true
 		}
 
-		// todo: is liked
+		// is liked
 		if err := u.likeRepository.GetByUserIDAndPostID(userIDAccessing, posts[i].ID); err == nil {
 			posts[i].IsLiked = true
 		}
@@ -102,18 +102,14 @@ func (u *PostUsecase) Delete(id string) error {
 		return err
 	}
 	//delete all commment
-	if err := u.commentRepository.DeleteAllCommentByPostID(id); err != nil {
-		return err
-	}
+	u.commentRepository.DeleteAllCommentByPostID(id)
+
 	// delete all likes
-	if err := u.likeRepository.DeleteAllLikeByPostID(id); err != nil {
-		return err
-	}
+	u.likeRepository.DeleteAllLikeByPostID(id)
 
 	// delete all saved
-	if err := u.saveRepository.DeleteAllSaveByPostID(id); err != nil {
-		return err
-	}
+	u.saveRepository.DeleteAllSaveByPostID(id)
+
 	return u.postRepository.Delete(id)
 }
 func (u *PostUsecase) DeleteAllPostByUserID(id string) error {

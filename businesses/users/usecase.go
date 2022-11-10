@@ -109,12 +109,8 @@ func (u *UserUsecase) Delete(id string) error {
 		return err
 	}
 
-	if err := u.postRepository.DeleteAllPostByUserID(id); err != nil {
-		return err
-	}
-	if err := u.userRepository.Delete(id); err != nil {
-		return err
-	}
+	u.postRepository.DeleteAllPostByUserID(id)
+	u.userRepository.Delete(id)
 
 	if user.ID != "" {
 		if user.UserType == "student" {
