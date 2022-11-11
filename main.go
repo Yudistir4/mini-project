@@ -40,6 +40,7 @@ func main() {
 	}
 
 	e := echo.New()
+	e.Static("/images", "images")
 
 	saveRepo := drivers.NewSaveRepository(db)
 
@@ -65,8 +66,6 @@ func main() {
 		UserController:    *userController,
 		PostController:    *postController,
 		CommentController: *commentController,
-		// LikeController:    *likeController,
-		// SaveController:    *saveController,
 	}
 
 	routesInit.RouteRegister(e)

@@ -2,6 +2,7 @@ package response
 
 import (
 	"mini-project/businesses/users"
+	"mini-project/util"
 	"time"
 
 	"gorm.io/gorm"
@@ -33,6 +34,9 @@ type User struct {
 }
 
 func FromDomain(domain users.Domain) User {
+	if domain.ProfilePic != "" {
+		domain.ProfilePic = util.GetConfig("BASE_URL_IMAGES") + domain.ProfilePic
+	}
 	return User{
 		ID:            domain.ID,
 		CreatedAt:     domain.CreatedAt,
