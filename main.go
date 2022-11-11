@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"mini-project/app/middlewares"
 	"mini-project/app/routes"
+	"os"
 
 	_commentUseCase "mini-project/businesses/comments"
 	_commentController "mini-project/controllers/comments"
@@ -16,18 +18,17 @@ import (
 
 	"mini-project/drivers"
 	"mini-project/drivers/mysql"
-	"mini-project/util"
 
 	"github.com/labstack/echo/v4"
 )
 
 func main() {
 	configDB := mysql.ConfigDB{
-		DB_USERNAME: util.GetConfig("DB_USERNAME"),
-		DB_PASSWORD: util.GetConfig("DB_PASSWORD"),
-		DB_HOST:     util.GetConfig("DB_HOST"),
-		DB_PORT:     util.GetConfig("DB_PORT"),
-		DB_NAME:     util.GetConfig("DB_NAME"),
+		DB_USERNAME: os.Getenv("DB_USERNAME"),
+		DB_PASSWORD: os.Getenv("DB_PASSWORD"),
+		DB_HOST:     os.Getenv("DB_HOST"),
+		DB_PORT:     os.Getenv("DB_PORT"),
+		DB_NAME:     os.Getenv("DB_NAME"),
 	}
 
 	db := configDB.InitDB()
@@ -35,7 +36,7 @@ func main() {
 	mysql.DBMigrate(db)
 
 	configJWT := middlewares.ConfigJwt{
-		SecretJWT:       util.GetConfig("JWT_SECRET_KEY"),
+		SecretJWT:       os.Getenv("JWT_SECRET_KEY"),
 		ExpiresDuration: 240,
 	}
 
@@ -70,5 +71,6 @@ func main() {
 
 	routesInit.RouteRegister(e)
 
-	log.Fatal(e.Start(":8000"))
+	var port string = fmt.Sprintf(":%s", os.Getenv("PORT"))
+	log.Fatal(e.Start(port))
 }

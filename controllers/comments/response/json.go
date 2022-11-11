@@ -2,7 +2,7 @@ package response
 
 import (
 	"mini-project/businesses/comments"
-	"mini-project/util"
+	"os"
 	"time"
 
 	"gorm.io/gorm"
@@ -24,7 +24,7 @@ type Comment struct {
 
 func FromDomain(domain comments.Domain) Comment {
 	if domain.ProfilePic != "" {
-		domain.ProfilePic = util.GetConfig("BASE_URL_IMAGES") + domain.ProfilePic
+		domain.ProfilePic = os.Getenv("BASE_URL_IMAGES") + domain.ProfilePic
 	}
 	return Comment{
 		ID:        domain.ID,

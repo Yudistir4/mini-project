@@ -2,7 +2,7 @@ package response
 
 import (
 	"mini-project/businesses/posts"
-	"mini-project/util"
+	"os"
 	"time"
 
 	"gorm.io/gorm"
@@ -31,10 +31,10 @@ type Post struct {
 
 func FromDomain(domain posts.Domain) Post {
 	if domain.ProfilePic != "" {
-		domain.ProfilePic = util.GetConfig("BASE_URL_IMAGES") + domain.ProfilePic
+		domain.ProfilePic = os.Getenv("BASE_URL_IMAGES") + domain.ProfilePic
 	}
 	if domain.FileName != "" {
-		domain.FileName = util.GetConfig("BASE_URL_IMAGES") + domain.FileName
+		domain.FileName = os.Getenv("BASE_URL_IMAGES") + domain.FileName
 	}
 	return Post{
 		ID:           domain.ID,
