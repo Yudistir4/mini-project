@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 	"mini-project/app/middlewares"
-	"mini-project/routes"
+	"mini-project/app/routes"
 
 	_commentUseCase "mini-project/businesses/comments"
 	_commentController "mini-project/controllers/comments"
@@ -40,7 +40,7 @@ func main() {
 	}
 
 	e := echo.New()
-	e.Static("/images", "images")
+	e.Static("/files", "files")
 
 	saveRepo := drivers.NewSaveRepository(db)
 

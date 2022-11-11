@@ -34,7 +34,7 @@ func FromDomain(domain posts.Domain) Post {
 		domain.ProfilePic = util.GetConfig("BASE_URL_IMAGES") + domain.ProfilePic
 	}
 	if domain.FileName != "" {
-		domain.ProfilePic = util.GetConfig("BASE_URL_IMAGES") + domain.FileName
+		domain.FileName = util.GetConfig("BASE_URL_IMAGES") + domain.FileName
 	}
 	return Post{
 		ID:           domain.ID,

@@ -79,7 +79,7 @@ func (ur *PostRepository) Delete(id string) error {
 	if err != nil {
 		return err
 	}
-	if err := os.Remove("images/" + postData.FileName); err != nil {
+	if err := os.Remove("files/" + postData.FileName); err != nil {
 		return err
 	}
 
@@ -93,7 +93,7 @@ func (ur *PostRepository) DeleteAllPostByUserID(userID string) error {
 	var posts []Post
 	ur.conn.Find(&posts, "user_id = ?", userID)
 	for _, val := range posts {
-		if err := os.Remove("images/" + val.FileName); err != nil {
+		if err := os.Remove("files/" + val.FileName); err != nil {
 			return err
 		}
 	}

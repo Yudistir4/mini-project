@@ -94,7 +94,7 @@ func (ctrl *UserController) GetByID(c echo.Context) error {
 		return controllers.NewResponse(c, http.StatusNotFound, "failed", err.Error(), "")
 	}
 
-	return controllers.NewResponse(c, http.StatusOK, "success", "all users", response.FromDomain(user))
+	return controllers.NewResponse(c, http.StatusOK, "success", "get users", response.FromDomain(user))
 
 }
 

@@ -37,7 +37,7 @@ func FileHandling(c echo.Context) (string, error) {
 	name := uuid.New().String() + filepath.Ext(file.Filename)
 
 	// Destination
-	dst, err := os.Create("images/" + name)
+	dst, err := os.Create("files/" + name)
 	if err != nil {
 		return "", err
 	}

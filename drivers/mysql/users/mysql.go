@@ -132,7 +132,7 @@ func (ur *UserRepository) UpdateProfilePicture(id string, filename string) error
 	}
 
 	if user.ProfilePic != filename && user.ProfilePic != "" {
-		if err := os.Remove("images/" + user.ProfilePic); err != nil {
+		if err := os.Remove("files/" + user.ProfilePic); err != nil {
 			return err
 		}
 	}

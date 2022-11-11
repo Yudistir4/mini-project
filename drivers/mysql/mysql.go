@@ -48,43 +48,5 @@ func (config *ConfigDB) InitDB() *gorm.DB {
 
 func DBMigrate(db *gorm.DB) {
 	db.AutoMigrate(&users.User{}, &students.Student{}, &lecturers.Lecturer{}, &posts.Post{}, &comments.Comment{}, &likes.Like{}, &saves.Save{})
+	db.Raw("INSERT INTO users (id,name,email,password,user_type,created_at) VALUES ('9999999','Universitas Terbuka','universitas@mail.com','123456','university','2022-11-11 15:04:04.668')").Scan(&users.User{})
 }
-
-// func SeedUser(db *gorm.DB) users.User {
-// 	password, _ := bcrypt.GenerateFromPassword([]byte("123123"), bcrypt.DefaultCost)
-
-// 	fakeUser, _ := util.CreateFaker[users.User]()
-
-// 	userRecord := users.User{
-// 		Email:    fakeUser.Email,
-// 		Password: string(password),
-// 	}
-
-// 	if err := db.Create(&userRecord).Error; err != nil {
-// 		panic(err)
-// 	}
-
-// 	var foundUser users.User
-
-// 	db.Last(&foundUser)
-
-// 	foundUser.Password = "123123"
-
-// 	return foundUser
-// }
-
-// func CleanSeeders(db *gorm.DB) {
-// 	db.Exec("SET FOREIGN_KEY_CHECKS = 0")
-
-// 	categoryResult := db.Exec("DELETE FROM categories")
-// 	itemResult := db.Exec("DELETE FROM notes")
-// 	userResult := db.Exec("DELETE FROM users")
-
-// 	var isFailed bool = itemResult.Error != nil || userResult.Error != nil || categoryResult.Error != nil
-
-// 	if isFailed {
-// 		panic(errors.New("error when cleaning up seeders"))
-// 	}
-
-// 	log.Println("Seeders are cleaned up successfully")
-// }
